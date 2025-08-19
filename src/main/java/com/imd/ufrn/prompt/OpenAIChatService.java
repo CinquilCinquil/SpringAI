@@ -1,5 +1,7 @@
 package com.imd.ufrn.prompt;
 
+import java.util.List;
+
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.evaluation.FactCheckingEvaluator;
 import org.springframework.ai.chat.evaluation.RelevancyEvaluator;
@@ -7,6 +9,7 @@ import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.evaluation.EvaluationRequest;
 import org.springframework.ai.evaluation.EvaluationResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -38,7 +41,7 @@ public class OpenAIChatService implements ChatService {
         String answer = chatClient.prompt()
                                 .system(systemSpec -> systemSpec
                                     .text(templateSystem)
-                                    .param("FIELD", "Animals"))
+                                    .param("ANIMAL", "Fish"))
                                 .user(userSpec -> userSpec
                                     .text(templateUser)
                                     .param("QUESTION", question))
@@ -51,5 +54,12 @@ public class OpenAIChatService implements ChatService {
         return answer + "\n"
                         + "Score: " + response.getScore() + "\n"
                         + "Approved: " + response.isPass() + "\n";
+    }
+
+    public List<Animal> getAnimals(String question) {
+        return chatClient.prompt()
+            .user(question)
+            .call()
+            .entity(new ParameterizedTypeReference<List<Animal>>() {});
     }
 }

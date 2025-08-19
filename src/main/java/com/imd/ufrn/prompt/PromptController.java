@@ -13,7 +13,12 @@ public class PromptController {
     }
 
     @GetMapping("prompt")
-    public String getMethodName(@RequestParam String question) {
+    public String getAnswer(@RequestParam String question) {
         return chatService.getAnswer(question);
+    }
+
+    @GetMapping("prompt-object")
+    public String getStructuredAnswer(@RequestParam String question) {
+        return String.valueOf(chatService.getAnimals(question));
     }
 }
