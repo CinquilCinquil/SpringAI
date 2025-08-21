@@ -1,1 +1,1 @@
-Given that, answer this question: {QUESTION}.
+Given that, answer or take an action based on: {QUESTION}.

@@ -1,8 +1,10 @@
-package com.imd.ufrn.prompt;
+package com.imd.ufrn.prompt.Controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.imd.ufrn.prompt.Service.ChatService;
 
 @RestController
 public class PromptController {

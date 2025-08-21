@@ -1,10 +1,15 @@
-package com.imd.ufrn.prompt;
+package com.imd.ufrn.prompt.Service;
 
 import java.util.List;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
 import org.springframework.ai.chat.evaluation.FactCheckingEvaluator;
 import org.springframework.ai.chat.evaluation.RelevancyEvaluator;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.ChatMemoryRepository;
+import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.evaluation.EvaluationRequest;
 import org.springframework.ai.evaluation.EvaluationResponse;
@@ -13,6 +18,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+
+import com.imd.ufrn.prompt.DataTypes.Animal;
+import com.imd.ufrn.prompt.Tools.DateAndTimeTools;
 
 
 @Service
@@ -29,8 +37,14 @@ public class OpenAIChatService implements ChatService {
     private RelevancyEvaluator relevancyEvaluator;
     private FactCheckingEvaluator factCheckingEvaluator;
 
+    ChatMemoryRepository chatMemoryRepository = new InMemoryChatMemoryRepository();
+    ChatMemory chatMemory = MessageWindowChatMemory.builder()
+                .chatMemoryRepository(chatMemoryRepository)
+                .maxMessages(10)
+                .build();
+
     public OpenAIChatService(ChatClient.Builder chatClientBuilder) {
-        ChatOptions chatOptions = ChatOptions.builder().model("gpt-4o-mini").build();
+        ChatOptions chatOptions = ChatOptions.builder().model("gemini-2.5-flash").build();
         this.chatClient = chatClientBuilder.defaultOptions(chatOptions).build();
         this.relevancyEvaluator = new RelevancyEvaluator(chatClientBuilder);
         this.factCheckingEvaluator = new FactCheckingEvaluator(chatClientBuilder);
@@ -39,12 +53,19 @@ public class OpenAIChatService implements ChatService {
     @Override
     public String getAnswer(String question) {
         String answer = chatClient.prompt()
+                                /*
+                                .advisors(
+                                    PromptChatMemoryAdvisor.builder(chatMemory).build(),
+                                    QuestionAnswerAdvisor.builder((vectorStore)).build()
+                                )
+                                */
                                 .system(systemSpec -> systemSpec
                                     .text(templateSystem)
                                     .param("ANIMAL", "Fish"))
                                 .user(userSpec -> userSpec
                                     .text(templateUser)
                                     .param("QUESTION", question))
+                                //.tools(new DateAndTimeTools())
                                 .call()
                                 .content();
 

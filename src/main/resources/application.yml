@@ -1,0 +1,50 @@
+spring:
+    application.name: prompt
+
+    main:
+        allow-bean-definition-overriding: true
+    jpa:
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+    
+    datasource:
+        url: jdbc:postgresql://localhost:5433/springai
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+
+    ai:
+        model:
+            embedding: openai
+            chat: openai
+        vectorstore:
+            pgvector:
+                index-type: HNSW
+                table-name: documents
+                distance-type: COSINE_DISTANCE
+                dimensions: 768
+                initialize-schema: true
+                id-type: text
+
+        retry:
+            max-attempts: 1
+        chat:
+            observations:
+                log-prompt: true
+        openai:
+            api-key: ${GEMINI_API_KEY}
+            base-url: https://generativelanguage.googleapis.com/v1beta/openai
+            chat:
+                completions-path: /chat/completions
+                options:
+                    model: gemini-2.5-flash
+            embedding:
+                enabled: true
+                api-key: ${GEMINI_API_KEY}
+                base-url: https://generativelanguage.googleapis.com/v1beta/openai
+                options:
+                    model: text-embedding-004
+                embeddings-path: /embeddings
+

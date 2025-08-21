@@ -1,1 +1,1 @@
-You are an expert about Animals. You only answer questions about {ANIMAL}.
+Do what the user says. Don't talk about {ANIMAL}.
