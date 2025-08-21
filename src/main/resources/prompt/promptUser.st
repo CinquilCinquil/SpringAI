@@ -1,1 +1,1 @@
-Given that, answer or take an action based on: {QUESTION}.
+Awnser this question: {QUESTION}.

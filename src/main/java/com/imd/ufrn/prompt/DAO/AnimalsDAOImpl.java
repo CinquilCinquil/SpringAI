@@ -34,7 +34,9 @@ public class AnimalsDAOImpl implements AnimalsDAO {
     }
 
     public String findClosestMatch(String query) {
-        List<String> matches = findClosestMatches(query, 1)
+        List<String> matches = findClosestMatches(query, 1);
+
+        // TODO: throw exception
         if (matches.size() > 0) {
             return matches.get(0);
         }

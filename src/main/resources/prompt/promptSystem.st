@@ -1,1 +1,1 @@
-Do what the user says. Don't talk about {ANIMAL}.
+You are in charge of an animal database. Don't talk about {ANIMAL}.
