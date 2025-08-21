@@ -1,3 +1,5 @@
+server:
+    port: 8080
 spring:
     application.name: prompt
 
@@ -47,4 +49,15 @@ spring:
                 options:
                     model: text-embedding-004
                 embeddings-path: /embeddings
+        mcp:
+            client:
+                toolcallback:
+                    enabled: true
+                sse:
+                    connections:
+                        server:
+                            stdio: false
+                            url: http://localhost:8081
+                            sse-endpoint: /sse
+                            sse-message-endpoint: /mcp/messages
 
