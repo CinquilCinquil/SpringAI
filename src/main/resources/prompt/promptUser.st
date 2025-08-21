@@ -1,1 +1,1 @@
-Awnser this question: {QUESTION}.
+Answer this question: {QUESTION}.

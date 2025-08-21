@@ -14,6 +14,11 @@ public class PromptController {
         this.chatService = chatService;
     }
 
+    @GetMapping("/")
+    public String openPage() {
+        return chatService.getAnswer("Who are you? Present yourself. Elegantly.");
+    }
+
     @GetMapping("prompt")
     public String getAnswer(@RequestParam String question) {
         return chatService.getAnswer(question);
