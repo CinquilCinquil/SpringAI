@@ -1,0 +1,17 @@
+server:
+    port: 8081
+spring:
+    application.name: testMCPServer
+ai:
+    mcp:
+        server:
+            stdio: false
+            enabled: true
+            type: SYNC
+            name: sigaa-mcp-server
+            version: 1.0.0
+            capabilities:
+                tool: true
+                resource: false
+                prompt: false
+                completion: false
