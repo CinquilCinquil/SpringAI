@@ -12,11 +12,16 @@ import org.springframework.stereotype.Repository;
 public class AnimalsDAOImpl implements AnimalsDAO {
 
     @Autowired VectorStore vectorStore;
+
     public void add(List<String> animals) {
         List<Document> documents = animals.stream()
             .map(Document::new)
             .toList();
         vectorStore.add(documents);
+    }
+
+    public void addDocs(List<Document> chunks) {
+        vectorStore.add(chunks);
     }
 
     public List<String> findClosestMatches(String query, int numberOfMatches) {
@@ -43,6 +48,5 @@ public class AnimalsDAOImpl implements AnimalsDAO {
         else {
             return "EMPTY RESULT";
         }
-    }
-    
+    }    
 }

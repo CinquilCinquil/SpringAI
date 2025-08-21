@@ -62,8 +62,8 @@ public class OpenAIChatService implements ChatService {
 
         return chatClient.prompt()
                                 .advisors(
-                                    PromptChatMemoryAdvisor.builder(chatMemory).build()//,
-                                    //QuestionAnswerAdvisor.builder((vectorStore)).build()
+                                    PromptChatMemoryAdvisor.builder(chatMemory).build(),
+                                    QuestionAnswerAdvisor.builder((vectorStore)).build()
                                 )
                                 .advisors(advisor -> advisor.param(ChatMemory.CONVERSATION_ID, conversationId))
                                 .system(systemSpec -> systemSpec

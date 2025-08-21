@@ -22,7 +22,7 @@ public class EmbeddingController {
     }
 
     @GetMapping("addanimal")
-    public void getAwnser() {
+    public void saveAnimals() {
         List<String> animals = List.of(
             "Bee",
             "Dog",
@@ -30,6 +30,11 @@ public class EmbeddingController {
             "Horse"
         );
         embeddingService.save(animals);
+    }
+
+    @GetMapping("addrules")
+    public void addRules() {
+        embeddingService.loadDocument();
     }
     
 }
