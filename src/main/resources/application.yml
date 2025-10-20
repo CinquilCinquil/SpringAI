@@ -12,7 +12,7 @@ spring:
                 format_sql: true
     
     datasource:
-        url: jdbc:postgresql://localhost:5433/springai
+        url: jdbc:postgresql://localhost:5433/spring2
         username: postgres
         password: postgres
         driver-class-name: org.postgresql.Driver
@@ -50,14 +50,14 @@ spring:
                     model: text-embedding-004
                 embeddings-path: /embeddings
         mcp:
-            client:
-                toolcallback:
-                    enabled: true
-                sse:
-                    connections:
-                        server:
-                            stdio: false
-                            url: http://localhost:8081
-                            sse-endpoint: /sse
-                            sse-message-endpoint: /mcp/messages
+           client:
+               toolcallback:
+                   enabled: true
+               sse:
+                   connections:
+                       server:
+                           stdio: false
+                           url: http://localhost:8081
+                           sse-endpoint: /sse
+                           sse-message-endpoint: /mcp/messages
 

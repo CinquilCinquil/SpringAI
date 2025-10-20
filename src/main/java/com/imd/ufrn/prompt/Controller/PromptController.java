@@ -16,7 +16,7 @@ public class PromptController {
 
     @GetMapping("/")
     public String openPage() {
-        return chatService.getAnswer("Who are you? Present yourself. Elegantly.");
+        return chatService.getAnswer("Who are you? Present yourself, shortly.");
     }
 
     @GetMapping("prompt")
@@ -24,6 +24,9 @@ public class PromptController {
         return chatService.getAnswer(question);
     }
 
+    /*
+     * Model returns answer as a list of animals
+     */
     @GetMapping("prompt-object")
     public String getStructuredAnswer(@RequestParam String question) {
         return String.valueOf(chatService.getAnimals(question));

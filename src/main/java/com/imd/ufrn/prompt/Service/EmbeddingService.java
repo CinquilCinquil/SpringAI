@@ -17,12 +17,13 @@ public class EmbeddingService {
 
     private final EmbeddingModel model;
 
+    /*
+     *  Test method that finds closest animal, semantically, to a query
+     */
     public String findAnimal(String query) {
 
         List<float[]> animalEmbeddings = null;
         float[] queryEmbedding = null;
-
-        System.out.println(model);
 
         animalEmbeddings = model.embed(animals);
         queryEmbedding = model.embed(query);

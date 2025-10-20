@@ -21,7 +21,10 @@ public class EmbeddingController {
         return embeddingService.findClosestMatch(query);
     }
 
-    @GetMapping("addanimal")
+    /*
+     * Test method for saving strings in embeddingService
+     */
+    @GetMapping("add-animals")
     public void saveAnimals() {
         List<String> animals = List.of(
             "Bee",
@@ -32,9 +35,9 @@ public class EmbeddingController {
         embeddingService.save(animals);
     }
 
-    @GetMapping("addrules")
-    public void addRules() {
-        embeddingService.loadDocument();
+    @GetMapping("animal-rules")
+    public void addAnimalRules() {
+        embeddingService.loadDocument("data/ANIMAL_BIOLOGY.pdf"); // Downloaded from archive.org
     }
     
 }

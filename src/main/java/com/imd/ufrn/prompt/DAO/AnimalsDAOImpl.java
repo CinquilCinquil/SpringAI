@@ -29,10 +29,13 @@ public class AnimalsDAOImpl implements AnimalsDAO {
             .query(query)
             .topK(numberOfMatches)
             .build();
+
         List<Document> results = vectorStore.similaritySearch(request);
+
         if (results == null) {
             return List.of();
         }
+
         return results.stream()
             .map((Document doc) -> doc.getText())
             .toList();
@@ -41,12 +44,10 @@ public class AnimalsDAOImpl implements AnimalsDAO {
     public String findClosestMatch(String query) {
         List<String> matches = findClosestMatches(query, 1);
 
-        // TODO: throw exception
         if (matches.size() > 0) {
             return matches.get(0);
         }
-        else {
-            return "EMPTY RESULT";
-        }
+        
+        return "EMPTY RESULT";
     }    
 }

@@ -1,1 +1,1 @@
-Answer this question: {QUESTION}.
+User question: "{QUESTION}".

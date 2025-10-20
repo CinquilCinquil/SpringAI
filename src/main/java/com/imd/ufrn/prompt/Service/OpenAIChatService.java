@@ -11,9 +11,9 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.memory.InMemoryChatMemoryRepository;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
-import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.evaluation.EvaluationRequest;
 import org.springframework.ai.evaluation.EvaluationResponse;
+import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,8 +23,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import com.imd.ufrn.prompt.DataTypes.Animal;
-import com.imd.ufrn.prompt.Tools.AnimalTools;
-import com.imd.ufrn.prompt.Tools.DateAndTimeTools;
+
+import io.modelcontextprotocol.client.McpSyncClient;
 
 
 @Service
@@ -48,9 +48,10 @@ public class OpenAIChatService implements ChatService {
                 .maxMessages(10)
                 .build();
 
-    public OpenAIChatService(ChatClient.Builder chatClientBuilder) {
-        ChatOptions chatOptions = ChatOptions.builder().model("gemini-2.5-flash").build();
-        this.chatClient = chatClientBuilder.defaultOptions(chatOptions).build();
+    public OpenAIChatService(ChatClient.Builder chatClientBuilder, List<McpSyncClient> mcpClients) {
+        this.chatClient = chatClientBuilder
+            .defaultToolCallbacks(new SyncMcpToolCallbackProvider(mcpClients))
+            .build();
         this.relevancyEvaluator = new RelevancyEvaluator(chatClientBuilder);
         this.factCheckingEvaluator = new FactCheckingEvaluator(chatClientBuilder);
     }
@@ -60,30 +61,27 @@ public class OpenAIChatService implements ChatService {
         String user = "default";
         String conversationId = "conversation-" + user;
 
-        return chatClient.prompt()
-                                .advisors(
-                                    PromptChatMemoryAdvisor.builder(chatMemory).build(),
-                                    QuestionAnswerAdvisor.builder((vectorStore)).build()
-                                )
-                                .advisors(advisor -> advisor.param(ChatMemory.CONVERSATION_ID, conversationId))
-                                .system(systemSpec -> systemSpec
-                                    .text(templateSystem))
-                                    //.param("ANIMAL", "Horse"))
-                                .user(userSpec -> userSpec
-                                    .text(templateUser)
-                                    .param("QUESTION", question))
-                                //.tools(new AnimalTools())
-                                .call()
-                                .content();
+        String answer = chatClient.prompt(question)
+                        .advisors(
+                            PromptChatMemoryAdvisor.builder(chatMemory).build(),
+                            QuestionAnswerAdvisor.builder((vectorStore)).build()
+                        )
+                        .advisors(advisor -> advisor.param(ChatMemory.CONVERSATION_ID, conversationId))
+                        .system(systemSpec -> systemSpec
+                            .text(templateSystem))
+                        .user(question)
+                        .call()
+                        .content();
 
-        //EvaluationRequest evaluationRequest = new EvaluationRequest(question, answer);
-        //EvaluationResponse response = relevancyEvaluator.evaluate(evaluationRequest);
-        //EvaluationResponse response = factCheckingEvaluator.evaluate(evaluationRequest);
-        /*
+        EvaluationRequest evaluationRequest = new EvaluationRequest(question, answer);
+        EvaluationResponse relevancy = relevancyEvaluator.evaluate(evaluationRequest);
+        EvaluationResponse factcheck = factCheckingEvaluator.evaluate(evaluationRequest);
+        
         return answer + "\n"
-                        + "Score: " + response.getScore() + "\n"
-                        + "Approved: " + response.isPass() + "\n";
-        */
+                    + "Relenvacy Score: " + relevancy.getScore() + "\n"
+                    + "Relenvancy Approved: " + relevancy.isPass() + "\n"
+                    + "FactCheck Score: " + factcheck.getScore() + "\n"
+                    + "FactCheck Approved: " + factcheck.isPass() + "\n";
     }
 
     public List<Animal> getAnimals(String question) {

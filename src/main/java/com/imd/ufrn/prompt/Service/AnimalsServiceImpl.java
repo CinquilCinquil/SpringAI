@@ -63,8 +63,8 @@ public class AnimalsServiceImpl implements AnimalsService {
     }
 
     @Override
-    public void loadDocument() {
-        List<Document> documents = documentReader.loadText();
+    public void loadDocument(String filepath) {
+        List<Document> documents = documentReader.loadText(filepath);
         TokenTextSplitter splitter = new TokenTextSplitter();
         List<Document> chunks = splitter.apply(documents);
         animalsDao.addDocs(chunks);
