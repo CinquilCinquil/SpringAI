@@ -77,11 +77,14 @@ public class OpenAIChatService implements ChatService {
         EvaluationResponse relevancy = relevancyEvaluator.evaluate(evaluationRequest);
         EvaluationResponse factcheck = factCheckingEvaluator.evaluate(evaluationRequest);
         
-        return answer + "\n"
-                    + "Relenvacy Score: " + relevancy.getScore() + "\n"
-                    + "Relenvancy Approved: " + relevancy.isPass() + "\n"
-                    + "FactCheck Score: " + factcheck.getScore() + "\n"
-                    + "FactCheck Approved: " + factcheck.isPass() + "\n";
+        System.out.println(
+            "Relenvacy Score: " + relevancy.getScore() + "\n"
+            + "Relenvancy Approved: " + relevancy.isPass() + "\n"
+            + "FactCheck Score: " + factcheck.getScore() + "\n"
+            + "FactCheck Approved: " + factcheck.isPass() + "\n"
+        );
+
+        return answer;
     }
 
     public List<Animal> getAnimals(String question) {
